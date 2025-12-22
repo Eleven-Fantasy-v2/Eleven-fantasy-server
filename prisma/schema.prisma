@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id            String   @id @default(uuid())
+  walletAddress String   @unique
+  username      String?
+  totalPoint    Int      @default(0)
+  overallRank   Int?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  contestEntries ContestEntry[]
+
+  @@map("users")
+}
+
+model Contest {
+  id             String   @id @default(uuid())
+  name           String
+  matchWeek      Int      @unique
+  season         String   @default("2024/2025")
+  league         String   @default("Premier League")
+  entryFee       Float    @default(0)
+  maxParticipant Int      @default(1000)
+  status         String   @default("upcoming")
+  startDate      DateTime
+  endDate        DateTime
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  matches        Match[]
+  contestEntries ContestEntry[]
+
+  @@map("contests")
+}
+
+model Match {
+  id           String   @id @default(uuid())
+  contestId    String
+  matchWeek    Int
+  homeTeam     String
+  awayTeam     String
+  homeTeamId   String
+  awayTeamId   String
+  homeTeamLogo String?
+  awayTeamLogo String?
+  matchDate    DateTime
+  venue        String?
+  status       String   @default("scheduled")
+  homeScore    Int?
+  awayScore    Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  contest        Contest        @relation(fields: [contestId], references: [id])
+  contestEntries ContestEntry[]
+
+  @@index([contestId])
+  @@index([status])
+  @@index([matchDate])
+  @@map("matches")
+}
+
+model ContestEntry {
+  id             String   @id @default(uuid())
+  contestId      String
+  userId         String
+  matchId        String
+  selectedPlayer Json
+  totalScore     Float    @default(0)
+  rank           Int
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  contest Contest @relation(fields: [contestId], references: [id])
+  user    User    @relation(fields: [userId], references: [id])
+  match   Match   @relation(fields: [matchId], references: [id])
+
+  @@index([contestId, totalScore])
+  @@index([userId])
+  @@map("contest_entries")
+}
