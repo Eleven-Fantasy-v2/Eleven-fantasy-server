@@ -1,6 +1,9 @@
-import express, { Application, Request, Response } from "express";
+import express from "express";
+import type { Application, Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import { matchSyncService } from "./services/matchSync.service.js";
+import matchRoutes from "./routes/match.routes.js";
 
 dotenv.config();
 
@@ -19,6 +22,8 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
+app.use("/api/matches", matchRoutes);
+
 app.use((req: Request, res: Response) => {
   res.status(404).json({ error: "Route not found" });
 });
@@ -31,6 +36,9 @@ app.use((err: Error, req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`📡 Health check: http://localhost:${PORT}/health`);
+
+  matchSyncService.setupCronJobs();
+  console.log("⏰ Cron jobs initialized for automatic match updates");
 });
 
 export default app;

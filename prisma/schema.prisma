@@ -24,7 +24,7 @@ model User {
 model Contest {
   id             String   @id @default(uuid())
   name           String
-  matchWeek      Int      @unique
+  matchweek      Int      @unique
   season         String   @default("2024/2025")
   league         String   @default("Premier League")
   entryFee       Float    @default(0)
@@ -38,13 +38,15 @@ model Contest {
   matches        Match[]
   contestEntries ContestEntry[]
 
+  // @@unique([matchweek, season, league])
   @@map("contests")
 }
 
 model Match {
   id           String   @id @default(uuid())
   contestId    String
-  matchWeek    Int
+  externalId   String   @unique
+  matchweek    Int
   homeTeam     String
   awayTeam     String
   homeTeamId   String
