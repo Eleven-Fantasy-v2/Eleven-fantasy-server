@@ -22,6 +22,7 @@ app.get("/health", (req: Request, res: Response) => {
   });
 });
 
+//routes
 app.use("/api/matches", matchRoutes);
 
 app.use((req: Request, res: Response) => {
