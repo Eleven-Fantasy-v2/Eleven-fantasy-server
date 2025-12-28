@@ -10,7 +10,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "nodenext",
     "target": "esnext",
-    "types": [],
+    "types": ["node"],
     // For nodejs:
     // "lib": ["esnext"],
     // "types": ["node"],
@@ -22,7 +22,7 @@
     "declarationMap": true,
 
     // Stricter Typechecking Options
-    "noUncheckedIndexedAccess": true,
+    // "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
 
     // Style Options
@@ -42,7 +42,6 @@
     "moduleDetection": "force",
     "skipLibCheck": true
   },
-  // "include": ["**/*.ts"]
   "include": ["src/**/*", "src/services"],
   "exclude": ["node_modules", "dist"]
 }
